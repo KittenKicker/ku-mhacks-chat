@@ -25,9 +25,11 @@
   </body>
   <script>
     var myDataRef = new Firebase("https://sizzling-heat-3782.firebaseio.com/");
-    var submitRef = 
+
+    //Temporary...will need to be dynamic for classes
+    var submitRef = myDataRef.child("Messages/Room1/");
     var chat1Ref = myDataRef.child("Messages/Room1/");
-    var chat2Ref = myDataRef.child("Messages/Room2")
+    var chat2Ref = myDataRef.child("Messages/Room2/");
 
     chat1Ref.on("child_added", function(snapshot) {
       var name = snapshot.val().name
@@ -43,27 +45,29 @@
 
     $("#tab1link").click(function()
     {
-
+      submitRef = myDataRef.child("Messages/Room1/");
     });
 
+    $("#tab2link").click(function (){
+      submitRef = myDataRef.child("Messages/Room2/");
+    });
+
+    //end temporary
+    
     function displayChatMessage(name, text, tab)
     {
       $("<div/>").text(text).prepend($("<em/>").text(name + ": ")).appendTo($("#" + tab));
       $('#' + tab)[0].scrollTop = $('#' + tab)[0].scrollHeight;
     }
 
+    //This will change based on user who is logged in
     $('#messageInput').keypress(function (e) {
         if (e.keyCode == 13) {
           var name = $('#nameInput').val();
           var text = $('#messageInput').val();
-          myDataRef.push({name: name, text: text});
+          submitRef.push({name: name, text: text});
           $('#messageInput').val('');
         }
       });
-
-  myDataRef.on("child_removed", function()
-  {
-    $("#messagesDiv").text("DELETED!");
-  });
   </script>
 </html>
