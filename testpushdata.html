@@ -10,12 +10,12 @@
   </body>
   <script>
   	var myDataRef = new Firebase("https://sizzling-heat-3782.firebaseio.com/");
-
+  	myDataRef = myDataRef.child("Messages/Room1/");
   	myDataRef.on("child_added", function(snapshot) {
   		var key = "Chat1";
-  		var message = snapshot.val().Chats[key].Message.name;
-  		var text = snapshot.val().Chats[key].Message.text;
-  		displayChatMessage(message, text);
+  		var name = snapshot.val().name
+  		var text = snapshot.val().text
+  		displayChatMessage(name, text);
   	});
 
   	function displayChatMessage(name,text)
@@ -24,7 +24,7 @@
         $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
   	}
 
-  	$('#messageInput').keypress(function (e) {
+  	/*$('#messageInput').keypress(function (e) {
         if (e.keyCode == 13) {
           var name = $('#nameInput').val();
           var text = $('#messageInput').val();
@@ -32,7 +32,7 @@
           myDataRef.push({name: name, text: text, chat_key: chatKey});
           $('#messageInput').val('');
         }
-      });
+      });*/
 
  	myDataRef.on("child_removed", function()
  	{
