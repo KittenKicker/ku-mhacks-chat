@@ -3,6 +3,7 @@
     <script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
     <script src="jquery-ui-1.11.1.custom/jquery-ui.min.js"></script>
+    <script src="jquery.nicescroll.min.js"></script>
     <link rel="stylesheet" type="text/css" href="jquery-ui-1.11.1.custom/jquery-ui.min.css" />
     <script>
       $(function() {
@@ -13,43 +14,62 @@
   <body style="background-color:#555555;">
     <div id="tabs">
       <ul style="height:50px;">
-        <li style="height:50px;"><a id="tab1link" href="#tabs-1">Chat 1</a></li>
-        <li style="height:50px;"><a id="tab2link" href="#tabs-2">Chat 2</a></li>
+        <li style="height:50px;width:auto;"><a id="tab1link" href="#tabs-1">Chat 1 <div id="notifications1"></div></a></li>
+        <li style="height:50px;"><a id="tab2link" href="#tabs-2">Chat 2 <div id="notifications2"></div></a></li>
       </ul>
       <div id="tabs-1"></div>
       <div id="tabs-2"></div>
     </div>
-    <div id='messagesDiv'></div>
     <input style="color:#d9d9d9; background-color:#111; border-color:#111; text-align:left;" type='text' id='nameInput' class="ui-autocomplete-input ui-button ui-corners-all" placeholder='Name'>
     <input style="color:#d9d9d9; background-color:#111; border-color:#111; text-align:left;" type='text' id='messageInput' class="ui-autocomplete-input ui-button ui-corners-all" placeholder='Message'>
   </body>
   <script>
+
+
+    var firstLoad = true;
     var myDataRef = new Firebase("https://sizzling-heat-3782.firebaseio.com/");
 
     //Temporary...will need to be dynamic for classes
-    var submitRef = myDataRef.child("Messages/Room1/");
-    var chat1Ref = myDataRef.child("Messages/Room1/");
-    var chat2Ref = myDataRef.child("Messages/Room2/");
+    var notificationCount1 = 0;
+    var notificationCount2 = 0;
+   
+    var submitRef = myDataRef.child("Messages/0/");
+    var chat1Ref = myDataRef.child("Messages/0/");
+    var chat2Ref = myDataRef.child("Messages/1/");
 
     chat1Ref.on("child_added", function(snapshot) {
-      var name = snapshot.val().name
-      var text = snapshot.val().text
+      var name = snapshot.val().name;
+      var text = snapshot.val().text;
       displayChatMessage(name, text, "tabs-1");
+      if(!$("#tabs-1:parent").hasClass("ui-state-active"))
+      {
+        notificationCount1++;
+        $("#notifications1").html("(" + notificationCount1 + ")");
+      }
     });
 
     chat2Ref.on("child_added", function(snapshot) {
-      var name = snapshot.val().name
-      var text = snapshot.val().text
+      var name = snapshot.val().name;
+      var text = snapshot.val().text;
       displayChatMessage(name, text, "tabs-2");
+      if(!$("#tabs-2:parent").hasClass("ui-state-active"))
+      {
+        notificationCount2++;
+        $("#notifications2").html("(" + notificationCount2 + ")");
+      }
     });
 
     $("#tab1link").click(function()
     {
-      submitRef = myDataRef.child("Messages/Room1/");
+      submitRef = myDataRef.child("Messages/0/");
+      notificationCount1 = 0;
+      $("#notifications1").html("");
     });
 
     $("#tab2link").click(function (){
-      submitRef = myDataRef.child("Messages/Room2/");
+      submitRef = myDataRef.child("Messages/1/");
+      notificationCount2 = 0;
+      $("#notifications2").html("");
     });
 
     //end temporary
@@ -69,5 +89,6 @@
           $('#messageInput').val('');
         }
       });
+
   </script>
 </html>
