@@ -24,15 +24,14 @@
         $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
   	}
 
-  	/*$('#messageInput').keypress(function (e) {
+  	$('#messageInput').keypress(function (e) {
         if (e.keyCode == 13) {
           var name = $('#nameInput').val();
           var text = $('#messageInput').val();
-          var chatKey = 1;
-          myDataRef.push({name: name, text: text, chat_key: chatKey});
+          myDataRef.push({name: name, text: text});
           $('#messageInput').val('');
         }
-      });*/
+      });
 
  	myDataRef.on("child_removed", function()
  	{
